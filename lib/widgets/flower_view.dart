@@ -25,7 +25,7 @@ class FlowerView extends StatelessWidget {
   }
 
   FlowerView({Key key, int flowerKey}) : super(key: key) {
-    _viewModel = FlowerViewModel(flowerKey, Get.find());
+    _viewModel = FlowerViewModel(flowerKey, Get.find(), onDelete: () => Get.back());
     initFlowerControllers(null);
     initLinksControllers(null);
     _viewModel.onLoad.listen((event) async {
@@ -123,7 +123,7 @@ class FlowerView extends StatelessWidget {
                           ),
                           FlatButton(
                             onPressed: () {
-//                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
                               _viewModel.delete();
                             },
                             child: Text(

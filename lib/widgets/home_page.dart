@@ -99,8 +99,8 @@ class MyHomePage extends GetWidget<HomeController> {
                       if (controller.flowers.value != null)
                         ...(controller.flowers.value
                             .where(
-                              (element) => element.name.contains(
-                                controller.searchQuery.value,
+                              (element) => element.name.toLowerCase().contains(
+                                controller.searchQuery.value.toLowerCase(),
                               ),
                             )
                             .map(

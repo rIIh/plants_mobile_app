@@ -74,7 +74,7 @@ class FlowerView extends StatelessWidget {
         return Stack(
           children: [
             Hero(
-              tag: snapshot.data?.id,
+              tag: snapshot.data?.id ?? 'null',
               child: snapshot.data?.image?.value != null
                   ? Image.memory(
                       snapshot.data.image.value,

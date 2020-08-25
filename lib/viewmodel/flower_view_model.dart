@@ -64,7 +64,7 @@ class FlowerViewModel {
   bool get isValid =>
       _flower.value?.name?.value?.isNotEmpty == true &&
       _links.value?.every(
-            (element) => element.url.value.isNotEmpty,
+            (element) => element.url?.value?.isNotEmpty == true,
           ) ==
           true;
 

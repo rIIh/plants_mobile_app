@@ -1,7 +1,9 @@
-import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Value;
+import 'package:image_picker/image_picker.dart';
 import 'package:moor/moor.dart' show Value;
+import 'package:path/path.dart';
 import 'package:plants/data/database.dart';
 import 'package:plants/viewmodel/flower_view_model.dart';
 import 'package:plants/widgets/flower_page.dart';
@@ -38,9 +40,32 @@ class FlowerView extends StatelessWidget {
     });
   }
 
-  void loadImage() async {
-    final image = await FilePicker.getFile(type: FileType.image);
-    _viewModel.edit(FlowersCompanion(image: Value(image.readAsBytesSync())));
+  void loadImage(BuildContext context) async {
+    final picker = ImagePicker();
+    final image = await showCupertinoModalPopup(
+      builder: (context) => CupertinoActionSheet(
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () async => Navigator.of(context).pop(
+              picker.getImage(source: ImageSource.camera).then((value) => value?.readAsBytes()),
+            ),
+            child: Text('Camera'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async => Navigator.of(context).pop(
+              picker.getImage(source: ImageSource.gallery).then((value) => value?.readAsBytes()),
+            ),
+            child: Text('Gallery'),
+            isDefaultAction: true,
+          ),
+        ],
+      ),
+      context: context,
+    );
+
+    if (image != null) {
+      _viewModel.edit(FlowersCompanion(image: Value(image)));
+    }
   }
 
   Widget _buildImage() => StreamBuilder<FlowersCompanion>(
@@ -62,12 +87,14 @@ class FlowerView extends StatelessWidget {
                         height: double.infinity,
                         fit: BoxFit.cover,
                       )
-                    : Container()),
+                    : Container(
+                        color: Colors.grey,
+                      )),
             if (_viewModel.isEditMode)
               Material(
                 color: Colors.black45,
                 child: InkWell(
-                  onTap: loadImage,
+                  onTap: () => loadImage(context),
                   child: Center(
                     child: ClipOval(
                       child: Container(

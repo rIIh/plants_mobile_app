@@ -15,6 +15,7 @@ class HomeController extends GetxController {
   HomeController(this.dao) : watchFlowers = dao.allFlowers();
 
   Rx<List<FlowerWithLinks>> flowers = Rx();
+  var searchQuery = ''.obs;
 
   void onChange(List<FlowerWithLinks> data) {
     flowers.value = data;
@@ -40,50 +41,12 @@ class HomeController extends GetxController {
 }
 
 class MyHomePage extends GetWidget<HomeController> {
-/*  final List<Flower> flowers = [
-    Flower(
-      'A',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec purus mauris, consectetur at convallis eget, fringilla ut dui. Nunc at urna dui. Pellentesque justo nibh, tristique sit amet gravida eu, finibus ac diam. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nunc ac dolor id ex iaculis maximus eget ut odio. Nunc pharetra euismod justo ac aliquam. Integer fringilla nisi non mollis eleifend. Donec consequat libero eros, nec efficitur orci varius sed.',
-      null,
-      [
-        Link(url: 'http://google.com'),
-        Link(url: 'http://google.com'),
-        Link(url: 'http://google.com'),
-        Link(url: 'http://google.com'),
-        Link(url: 'http://google.com'),
-        Link(url: 'http://google.com'),
-        Link(url: 'http://google.com'),
-        Link(url: 'http://google.com'),
-        Link(url: 'http://google.com'),
-        Link(url: 'http://google.com'),
-        Link(url: 'http://google.com'),
-      ],
-    ),
-    Flower(
-      'B',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec purus mauris, consectetur at convallis eget, fringilla ut dui. Nunc at urna dui. Pellentesque justo nibh, tristique sit amet gravida eu, finibus ac diam. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nunc ac dolor id ex iaculis maximus eget ut odio. Nunc pharetra euismod justo ac aliquam. Integer fringilla nisi non mollis eleifend. Donec consequat libero eros, nec efficitur orci varius sed.',
-      null,
-      [
-        Link(url: 'http://google.com'),
-      ],
-    ),
-    Flower(
-      'C',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec purus mauris, consectetur at convallis eget, fringilla ut dui. Nunc at urna dui. Pellentesque justo nibh, tristique sit amet gravida eu, finibus ac diam. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nunc ac dolor id ex iaculis maximus eget ut odio. Nunc pharetra euismod justo ac aliquam. Integer fringilla nisi non mollis eleifend. Donec consequat libero eros, nec efficitur orci varius sed.',
-      null,
-      [
-        Link(url: 'http://google.com'),
-      ],
-    ),
-    Flower(
-      'D',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec purus mauris, consectetur at convallis eget, fringilla ut dui. Nunc at urna dui. Pellentesque justo nibh, tristique sit amet gravida eu, finibus ac diam. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nunc ac dolor id ex iaculis maximus eget ut odio. Nunc pharetra euismod justo ac aliquam. Integer fringilla nisi non mollis eleifend. Donec consequat libero eros, nec efficitur orci varius sed.',
-      null,
-      [
-        Link(url: 'http://google.com'),
-      ],
-    ),
-  ];*/
+  TextEditingController _searchController;
+
+  MyHomePage() {
+    _searchController = TextEditingController(text: controller.searchQuery.value)
+      ..addListener(() => controller.searchQuery.value = _searchController.text);
+  }
 
   void openFlowerPage(BuildContext context, FlowerWithLinks flower) {
     Navigator.of(context).push(
@@ -161,6 +124,11 @@ class MyHomePage extends GetWidget<HomeController> {
                       ),
                       if (controller.flowers.value != null)
                         ...(controller.flowers.value
+                            .where(
+                              (element) => element.flower.name.contains(
+                                controller.searchQuery.value,
+                              ),
+                            )
                             .map(
                               (flower) => [
                                 SizedBox(
@@ -205,6 +173,7 @@ class MyHomePage extends GetWidget<HomeController> {
                           ),
                           Expanded(
                             child: TextField(
+                              controller: _searchController,
                               decoration: null,
                             ),
                           ),

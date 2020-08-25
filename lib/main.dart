@@ -12,16 +12,24 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Palette.main,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: 'Playfair',
-        scaffoldBackgroundColor: Colors.white,
+    return GestureDetector(
+      onTap: () {
+        print(FocusScope.of(context).hasPrimaryFocus);
+        var unfocus = new FocusNode();
+        FocusScope.of(context)..requestFocus(unfocus);
+        unfocus..unfocus()..dispose();
+      },
+      child: GetMaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Palette.main,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          fontFamily: 'Playfair',
+          scaffoldBackgroundColor: Colors.white,
+        ),
+        initialBinding: AppBinding(),
+        home: MyHomePage(),
       ),
-      initialBinding: AppBinding(),
-      home: MyHomePage(),
     );
   }
 }

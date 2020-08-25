@@ -31,7 +31,7 @@ class MyHomePage extends GetWidget<HomeController> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => FlowerView(
-          flowerKey: flower.id,
+          flowerKey: flower?.id,
         ),
       ),
     );
@@ -97,8 +97,8 @@ class MyHomePage extends GetWidget<HomeController> {
                         ...(controller.flowers.value
                             .where(
                               (element) => element.name.toLowerCase().contains(
-                                controller.searchQuery.value.toLowerCase(),
-                              ),
+                                    controller.searchQuery.value.toLowerCase(),
+                                  ),
                             )
                             .map(
                               (flower) => [
@@ -149,13 +149,15 @@ class MyHomePage extends GetWidget<HomeController> {
                             ),
                           ),
                           Obx(
-                            () => controller.searchQuery.value.isNotEmpty ? GestureDetector(
-                              onTap: () => _searchController.text = '',
-                              child: Icon(
-                                Icons.close,
-                                color: Colors.grey,
-                              ),
-                            ) : Container(),
+                            () => controller.searchQuery.value.isNotEmpty
+                                ? GestureDetector(
+                                    onTap: () => _searchController.text = '',
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Colors.grey,
+                                    ),
+                                  )
+                                : Container(),
                           )
                         ],
                       ),

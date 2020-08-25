@@ -130,7 +130,7 @@ class FlowerViewModel {
   void editLink(int index, LinksCompanion link) {
     _links.add([
       ..._links.value.sublist(0, index),
-      _links.value[index].copyWith(name: link.name, url: link.url),
+      _links.value[index].copyWith(name: drop(link.name), url: drop(link.url)),
       ..._links.value.sublist(index + 1),
     ]);
   }

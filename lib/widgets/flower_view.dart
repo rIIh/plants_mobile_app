@@ -244,7 +244,7 @@ class FlowerView extends StatelessWidget {
                 child: TextField(
                   controller: _linkControllers[index].name,
                   enabled: _viewModel.isEditMode,
-                  decoration: InputDecoration(hintText: 'Name'),
+                  decoration: InputDecoration(hintText: 'Name', isCollapsed: true),
                   onChanged: (value) => _viewModel.editLink(index, LinksCompanion(name: Value(value))),
                 ),
               ),
@@ -256,8 +256,13 @@ class FlowerView extends StatelessWidget {
                 child: TextField(
                   enabled: _viewModel.isEditMode,
                   controller: _linkControllers[index].url,
-                  decoration: InputDecoration(hintText: 'URL'),
-                  onChanged: (value) => _viewModel.editLink(index, LinksCompanion(url: Value(value))),
+                  decoration: InputDecoration(hintText: 'URL', isCollapsed: true),
+                  onChanged: (value) => _viewModel.editLink(
+                    index,
+                    LinksCompanion(
+                      url: Value(value),
+                    ),
+                  ),
                 ),
               ),
             ] else
@@ -267,6 +272,7 @@ class FlowerView extends StatelessWidget {
                   controller: _linkControllers[index].name.text.isNotEmpty
                       ? _linkControllers[index].name
                       : _linkControllers[index].url,
+                  decoration: InputDecoration(isCollapsed: true),
                 ),
               ),
             if (_viewModel.isEditMode)

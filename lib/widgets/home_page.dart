@@ -5,71 +5,42 @@ import 'package:get/get.dart' hide Value;
 import 'package:moor/moor.dart' hide Column;
 import 'package:plants/data/dao.dart';
 import 'package:plants/data/database.dart';
-import 'package:plants/widgets/flower_page.dart';
+
+import 'flower_view.dart';
 
 class HomeController extends GetxController {
   final FlowersDao dao;
-  final Stream<List<FlowerWithLinks>> watchFlowers;
-  StreamSubscription disposer;
 
-  HomeController(this.dao) : watchFlowers = dao.allFlowers();
+  HomeController(this.dao);
 
-  Rx<List<FlowerWithLinks>> flowers = Rx();
+  Rx<List<Flower>> flowers = Rx();
   var searchQuery = ''.obs;
-
-  void onChange(List<FlowerWithLinks> data) {
-    flowers.value = data;
-  }
 
   @override
   void onInit() {
-    disposer = watchFlowers.listen(onChange);
+    flowers.bindStream(dao.watchFlowers());
   }
-
-  @override
-  void onClose() {
-    disposer.cancel();
-  }
-
-  Future<FlowerWithLinks> get(int id) async => dao.get(id);
-
-  Future<int> save(FlowerWithLinksInsertable value) async => dao.insertFlower(value);
-
-  updateFlower(FlowerWithLinksInsertable value) => dao.updateFlowerWithLinks(value);
-
-  deleteFlower(FlowerWithLinksInsertable value) => dao.deleteFlowerWithLinks(value);
 }
 
 class MyHomePage extends GetWidget<HomeController> {
   TextEditingController _searchController;
 
   MyHomePage() {
-    _searchController = TextEditingController(text: controller.searchQuery.value)
+    _searchController = TextEditingController(text: '')
       ..addListener(() => controller.searchQuery.value = _searchController.text);
   }
 
-  void openFlowerPage(BuildContext context, FlowerWithLinks flower) {
+  void openFlowerPage(BuildContext context, Flower flower) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => FlowerPage(
-          tuple: flower,
-          onSubmit: (value) => controller.updateFlower(value),
-          onDelete: () async {
-            await controller.deleteFlower(
-              FlowerWithLinksInsertable(
-                flower: FlowersCompanion(
-                  id: Value(flower.flower.id),
-                ),
-              ),
-            );
-            Navigator.of(context).pop();
-          },
+        builder: (context) => FlowerView(
+          flowerKey: flower.id,
         ),
       ),
     );
   }
 
-  Widget _buildFlower(FlowerWithLinks flower) {
+  Widget _buildFlower(Flower flower) {
     return Builder(
       builder: (context) => GestureDetector(
         onTap: () => openFlowerPage(context, flower),
@@ -84,10 +55,10 @@ class MyHomePage extends GetWidget<HomeController> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  image: flower.flower.image != null
+                  image: flower.image != null
                       ? DecorationImage(
                           fit: BoxFit.cover,
-                          image: MemoryImage(flower.flower.image),
+                          image: MemoryImage(flower.image),
                         )
                       : null,
                 ),
@@ -97,7 +68,7 @@ class MyHomePage extends GetWidget<HomeController> {
             Padding(
               padding: const EdgeInsets.only(left: 12),
               child: Text(
-                flower.flower.name,
+                flower.name,
                 style: Theme.of(context).textTheme.headline6,
               ),
             )
@@ -125,7 +96,7 @@ class MyHomePage extends GetWidget<HomeController> {
                       if (controller.flowers.value != null)
                         ...(controller.flowers.value
                             .where(
-                              (element) => element.flower.name.contains(
+                              (element) => element.name.contains(
                                 controller.searchQuery.value,
                               ),
                             )
@@ -177,6 +148,13 @@ class MyHomePage extends GetWidget<HomeController> {
                               decoration: null,
                             ),
                           ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.close,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {},
+                          ),
                         ],
                       ),
                     ),
@@ -196,13 +174,13 @@ class MyHomePage extends GetWidget<HomeController> {
                       color: Colors.white,
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => FlowerPage(
-                            onSubmit: (value) async {
+                          builder: (context) => FlowerView(
+                           /* onSubmit: (value) async {
                               Navigator.of(context).pop();
                               final id = await controller.save(value);
                               final flower = await controller.get(id);
                               openFlowerPage(context, flower);
-                            },
+                            },*/
                           ),
                         ),
                       ),

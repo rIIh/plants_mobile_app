@@ -4,7 +4,6 @@ import 'package:moor/moor.dart';
 import 'package:plants/data/dao.dart';
 import 'package:plants/data/database.dart';
 import 'package:plants/types/details_mode.dart';
-import 'package:plants/types/link_controller.dart';
 import 'package:rxdart/rxdart.dart';
 
 class FlowerViewModel {

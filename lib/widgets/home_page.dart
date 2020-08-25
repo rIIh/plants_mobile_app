@@ -52,17 +52,20 @@ class MyHomePage extends GetWidget<HomeController> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  image: flower.image != null
-                      ? DecorationImage(
-                          fit: BoxFit.cover,
-                          image: MemoryImage(flower.image),
-                        )
-                      : null,
+              child: Hero(
+                tag: flower.id,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    image: flower.image != null
+                        ? DecorationImage(
+                            fit: BoxFit.cover,
+                            image: MemoryImage(flower.image),
+                          )
+                        : null,
+                  ),
+                  height: 196,
                 ),
-                height: 196,
               ),
             ),
             Padding(
@@ -148,13 +151,15 @@ class MyHomePage extends GetWidget<HomeController> {
                               decoration: null,
                             ),
                           ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.close,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {},
-                          ),
+                          Obx(
+                            () => controller.searchQuery.value.isNotEmpty ? GestureDetector(
+                              onTap: () => _searchController.text = '',
+                              child: Icon(
+                                Icons.close,
+                                color: Colors.grey,
+                              ),
+                            ) : Container(),
+                          )
                         ],
                       ),
                     ),
@@ -175,13 +180,13 @@ class MyHomePage extends GetWidget<HomeController> {
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => FlowerView(
-                           /* onSubmit: (value) async {
+                              /* onSubmit: (value) async {
                               Navigator.of(context).pop();
                               final id = await controller.save(value);
                               final flower = await controller.get(id);
                               openFlowerPage(context, flower);
                             },*/
-                          ),
+                              ),
                         ),
                       ),
                     ),

@@ -73,23 +73,26 @@ class FlowerView extends StatelessWidget {
       builder: (context, snapshot) {
         return Stack(
           children: [
-            snapshot.data?.image?.value != null
-                ? Image.memory(
-                    snapshot.data.image.value,
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: BoxFit.cover,
-                  )
-                : (snapshot.data?.image?.value != null
-                    ? Image.memory(
-                        snapshot.data.image.value,
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                      )
-                    : Container(
-                        color: Colors.grey,
-                      )),
+            Hero(
+              tag: snapshot.data?.id,
+              child: snapshot.data?.image?.value != null
+                  ? Image.memory(
+                      snapshot.data.image.value,
+                      width: double.infinity,
+                      height: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                  : (snapshot.data?.image?.value != null
+                      ? Image.memory(
+                          snapshot.data.image.value,
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          color: Colors.grey,
+                        )),
+            ),
             if (_viewModel.isEditMode)
               Material(
                 color: Colors.black45,

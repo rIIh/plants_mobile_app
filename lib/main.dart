@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Palette.main,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'Playfair',
+        scaffoldBackgroundColor: Colors.white,
       ),
       initialBinding: AppBinding(),
       home: MyHomePage(),

@@ -177,18 +177,7 @@ class MyHomePage extends GetWidget<HomeController> {
                     child: IconButton(
                       icon: Icon(Icons.add),
                       color: Colors.white,
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => FlowerView(
-                              /* onSubmit: (value) async {
-                              Navigator.of(context).pop();
-                              final id = await controller.save(value);
-                              final flower = await controller.get(id);
-                              openFlowerPage(context, flower);
-                            },*/
-                              ),
-                        ),
-                      ),
+                      onPressed: () => openFlowerPage(context, null),
                     ),
                   ),
                 ],

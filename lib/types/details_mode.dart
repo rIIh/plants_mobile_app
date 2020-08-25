@@ -1,0 +1,1 @@
+enum DetailsMode { present, edit }

@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Value;
 import 'package:image_picker/image_picker.dart';
 import 'package:moor/moor.dart' show Value;
-import 'package:path/path.dart';
 import 'package:plants/data/database.dart';
 import 'package:plants/viewmodel/flower_view_model.dart';
-import 'package:plants/widgets/flower_page.dart';
+import 'package:plants/types/link_controller.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:url_launcher/url_launcher.dart';
 

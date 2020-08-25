@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:moor/moor.dart';
 import 'package:plants/data/dao.dart';
 import 'package:plants/data/database.dart';
-import 'package:plants/widgets/flower_page.dart';
+import 'package:plants/types/details_mode.dart';
+import 'package:plants/types/link_controller.dart';
 import 'package:rxdart/rxdart.dart';
 
 class FlowerViewModel {
@@ -32,9 +33,9 @@ class FlowerViewModel {
 
   Stream<List<LinksCompanion>> get links => _links;
 
-  final BehaviorSubject<DetailMode> _mode = BehaviorSubject();
+  final BehaviorSubject<DetailsMode> _mode = BehaviorSubject();
 
-  Stream<DetailMode> get mode => _mode;
+  Stream<DetailsMode> get mode => _mode;
 
   final BehaviorSubject<void> _onLoad = BehaviorSubject();
 
@@ -56,10 +57,10 @@ class FlowerViewModel {
       });
     });
     _id.add(id);
-    _mode.add(id == null ? DetailMode.edit : DetailMode.present);
+    _mode.add(id == null ? DetailsMode.edit : DetailsMode.present);
   }
 
-  bool get isEditMode => _mode.value == DetailMode.edit;
+  bool get isEditMode => _mode.value == DetailsMode.edit;
 
   bool get isValid =>
       _flower.value?.name?.value?.isNotEmpty == true &&
@@ -71,8 +72,8 @@ class FlowerViewModel {
   get isExists => _id.value != null || _flower.value?.id?.value != null;
 
   void switchMode() {
-    final nextMode = DetailMode.values.firstWhere((element) => element != _mode.value);
-    if (nextMode == DetailMode.present) {
+    final nextMode = DetailsMode.values.firstWhere((element) => element != _mode.value);
+    if (nextMode == DetailsMode.present) {
       save();
     }
     _mode.add(nextMode);

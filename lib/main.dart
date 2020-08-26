@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Value;
 import 'package:plants/binding/app_binding.dart';
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Palette.main,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           fontFamily: 'Playfair',
-          scaffoldBackgroundColor: Colors.white,
+          scaffoldBackgroundColor: Color(0xFFFFF6E4),
         ),
         initialBinding: AppBinding(),
         home: MyHomePage(),

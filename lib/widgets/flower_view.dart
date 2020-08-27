@@ -181,7 +181,7 @@ class FlowerView extends StatelessWidget {
                     topLeft: Radius.circular(radius),
                     topRight: Radius.circular(radius),
                   ),
-                  color: Colors.white,
+                  color: Theme.of(context).scaffoldBackgroundColor,
                 ),
               ),
             ),
@@ -358,12 +358,6 @@ class FlowerView extends StatelessWidget {
         stream: _viewModel.flower.cast().mergeWith([_viewModel.links, _viewModel.mode]),
         builder: (context, snapshot) {
           return Scaffold(
-            appBar: AppBar(
-              title: StreamBuilder<FlowersCompanion>(
-                stream: _viewModel.flower,
-                builder: (context, snapshot) => Text(snapshot.data?.name?.value ?? ''),
-              ),
-            ),
             body: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,

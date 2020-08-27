@@ -4,6 +4,8 @@ import 'package:plants/data/dao.dart';
 import 'package:plants/data/database.dart';
 import 'package:plants/utils/insert_between.dart';
 import 'package:plants/utils/shift_color.dart';
+import 'package:plants/widgets/app_bar.dart';
+import 'package:plants/widgets/inherited_icon_button.dart';
 
 import 'flower_view.dart';
 
@@ -46,6 +48,7 @@ class MyHomePage extends GetWidget<HomeController> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(0),
                 ),
+                elevation: 0,
                 child: Hero(
                   tag: flower.id,
                   child: Container(
@@ -89,34 +92,13 @@ class MyHomePage extends GetWidget<HomeController> {
   Widget build(BuildContext context) {
     Color primary = shiftColorLuminance(Theme.of(context).primaryColor, 30);
     const padding = 12.0;
-    const double appbarHeight = 48;
-    const hideFilters = true;
     return Scaffold(
-      appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(left: padding),
-          child: Text('My Book'),
-        ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        textTheme: Theme.of(context).primaryTextTheme.apply(
-              bodyColor: primary,
-            ),
-        iconTheme: IconThemeData(color: primary),
-        toolbarHeight: appbarHeight * (hideFilters ? 2 : 3),
-        bottom: Toolbar(
-          color: primary,
-          padding: padding,
-          height: appbarHeight,
-          hideFilters: hideFilters,
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => openFlowerPage(context, null),
-          ),
-          SizedBox(
-            width: padding,
+      appBar: MainAppBar(
+        title: Text('My Book'),
+        actions: (context) => [
+          GestureDetector(
+            child: Icon(Icons.add),
+            onTap: () => openFlowerPage(context, null),
           ),
         ],
       ),

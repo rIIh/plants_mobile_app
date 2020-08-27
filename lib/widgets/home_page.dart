@@ -33,50 +33,53 @@ class MyHomePage extends GetWidget<HomeController> {
   }
 
   Widget _buildFlower(Flower flower) {
-    return Builder(
-      builder: (context) => GestureDetector(
-        onTap: () => openFlowerPage(context, flower),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
-              child: Hero(
-                tag: flower.id,
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: flower.image != null
-                        ? DecorationImage(
-                            fit: BoxFit.cover,
-                            image: MemoryImage(flower.image),
-                          )
-                        : null,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Builder(
+        builder: (context) => GestureDetector(
+          onTap: () => openFlowerPage(context, flower),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0),
+                ),
+                child: Hero(
+                  tag: flower.id,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: flower.image != null
+                          ? DecorationImage(
+                              fit: BoxFit.cover,
+                              image: MemoryImage(flower.image),
+                            )
+                          : null,
+                    ),
+                    height: 164,
                   ),
-                  height: 196,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: Text(
-                flower.name,
-                style: Theme.of(context).textTheme.headline6.apply(color: Theme.of(context).primaryColor),
+              Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: Text(
+                  flower.name,
+                  style: Theme.of(context).textTheme.headline6.apply(color: Theme.of(context).primaryColor),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: Text(
-                'фильтр',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText2
-                    .apply(fontWeightDelta: -1, color: shiftColorLuminance(Theme.of(context).primaryColor, 30)),
+              Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: Text(
+                  'фильтр',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .apply(fontWeightDelta: -1, color: shiftColorLuminance(Theme.of(context).primaryColor, 30)),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -84,30 +87,43 @@ class MyHomePage extends GetWidget<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    Color primary = shiftColorLuminance(Theme.of(context).primaryColorDark, 0);
+    Color primary = shiftColorLuminance(Theme.of(context).primaryColor, 30);
+    const padding = 12.0;
+    const double appbarHeight = 48;
+    const hideFilters = true;
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Book'),
+        title: Padding(
+          padding: const EdgeInsets.only(left: padding),
+          child: Text('My Book'),
+        ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         textTheme: Theme.of(context).primaryTextTheme.apply(
               bodyColor: primary,
             ),
         iconTheme: IconThemeData(color: primary),
+        toolbarHeight: appbarHeight * (hideFilters ? 2 : 3),
         bottom: Toolbar(
           color: primary,
+          padding: padding,
+          height: appbarHeight,
+          hideFilters: hideFilters,
         ),
         actions: [
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () => openFlowerPage(context, null),
           ),
+          SizedBox(
+            width: padding,
+          ),
         ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(22.0),
+            padding: const EdgeInsets.all(padding),
             child: Obx(
               () => Column(
                 children: insertBetween(
@@ -118,7 +134,7 @@ class MyHomePage extends GetWidget<HomeController> {
                       ),
                       Divider(
                         height: 1,
-                        thickness: 1.2,
+                        thickness: 1,
                         color: primary,
                       ),
                       const SizedBox(
@@ -154,9 +170,18 @@ class MyHomePage extends GetWidget<HomeController> {
 
 class Toolbar extends GetWidget<HomeController> implements PreferredSizeWidget {
   final Color color;
+  final double padding;
+  final bool hideFilters;
+  final double height;
   TextEditingController _searchController;
 
-  Toolbar({Key key, this.color}) : super(key: key) {
+  Toolbar({
+    Key key,
+    this.padding = 20,
+    this.color,
+    this.hideFilters = true,
+    this.height = kToolbarHeight,
+  }) : super(key: key) {
     _searchController = TextEditingController(text: '')
       ..addListener(() => controller.searchQuery.value = _searchController.text);
   }
@@ -166,6 +191,7 @@ class Toolbar extends GetWidget<HomeController> implements PreferredSizeWidget {
     return Container(
       height: preferredSize.height,
       width: preferredSize.width,
+      margin: EdgeInsets.symmetric(horizontal: padding),
       child: Container(
         decoration: BoxDecoration(
           border: Border.symmetric(
@@ -183,13 +209,16 @@ class Toolbar extends GetWidget<HomeController> implements PreferredSizeWidget {
                       Expanded(
                         child: TextField(
                           controller: _searchController,
+                          style: TextStyle(color: color),
                           decoration: InputDecoration(
                             isCollapsed: true,
                             border: InputBorder.none,
                             fillColor: color,
                             hintText: 'Поиск',
+                            hintStyle: TextStyle(color: shiftColorLuminance(color, 50)),
                             icon: Icon(
                               Icons.search,
+                              color: color,
                             ),
                           ),
                         ),
@@ -201,7 +230,7 @@ class Toolbar extends GetWidget<HomeController> implements PreferredSizeWidget {
                                     controller.searchQuery.value.isNotEmpty ? () => _searchController.text = '' : null,
                                 child: Icon(
                                   Icons.close,
-                                  color: Colors.grey,
+                                  color: color,
                                 ),
                               )
                             : Container(),
@@ -211,57 +240,59 @@ class Toolbar extends GetWidget<HomeController> implements PreferredSizeWidget {
                 ),
               ),
             ),
-            Divider(
-              height: 1,
-              thickness: 1,
-              color: color,
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: insertBetween(
-                          VerticalDivider(
-                            width: 1,
-                            thickness: 1,
-                            color: color,
-                          ),
-                          [
-                            ...List.generate(
-                              10,
-                              (index) => Container(
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                                child: Center(
-                                  child: Text(
-                                    'Фильтр',
-                                    style: TextStyle(color: color),
+            if (!hideFilters) ...[
+              Divider(
+                height: 1,
+                thickness: 1,
+                color: color,
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: insertBetween(
+                            VerticalDivider(
+                              width: 1,
+                              thickness: 1,
+                              color: color,
+                            ),
+                            [
+                              ...List.generate(
+                                10,
+                                (index) => Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  child: Center(
+                                    child: Text(
+                                      'Фильтр',
+                                      style: TextStyle(color: color),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  VerticalDivider(
-                    width: 1,
-                    thickness: 1,
-                    color: color,
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.tune,
+                    VerticalDivider(
+                      width: 1,
+                      thickness: 1,
                       color: color,
                     ),
-                    onPressed: null,
-                  ),
-                ],
+                    IconButton(
+                      icon: Icon(
+                        Icons.tune,
+                        color: color,
+                      ),
+                      onPressed: null,
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),
@@ -269,5 +300,5 @@ class Toolbar extends GetWidget<HomeController> implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight * 2);
+  Size get preferredSize => Size.fromHeight(height * (hideFilters ? 1 : 2));
 }

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Value;
 import 'package:plants/data/dao.dart';
 import 'package:plants/data/database.dart';
+import 'package:plants/icons/plants_icons.dart';
 import 'package:plants/utils/insert_between.dart';
 import 'package:plants/utils/shift_color.dart';
 import 'package:plants/widgets/app_bar.dart';
 import 'package:plants/widgets/inherited_icon_button.dart';
 
+import 'bottom_navigation_bar_item.dart';
 import 'flower_view.dart';
 
 class HomeController extends GetxController {
@@ -97,8 +99,26 @@ class MyHomePage extends GetWidget<HomeController> {
         title: Text('My Book'),
         actions: (context) => [
           GestureDetector(
-            child: Icon(Icons.add),
+            child: Icon(Plants.plus),
             onTap: () => openFlowerPage(context, null),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        backgroundColor: Theme.of(context).primaryColor,
+        fixedColor: Theme.of(context).scaffoldBackgroundColor,
+        unselectedItemColor: Theme.of(context).scaffoldBackgroundColor,
+        items: [
+          UntitledBottomNavigationBarItem(
+            icon: Icon(Plants.home, size: 18,),
+          ),
+          UntitledBottomNavigationBarItem(
+            icon: Icon(Plants.plant, size: 18,),
+          ),
+          UntitledBottomNavigationBarItem(
+            icon: Icon(Plants.user, size: 18,),
           ),
         ],
       ),

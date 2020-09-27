@@ -28,6 +28,7 @@ class FlowersDao extends DatabaseAccessor<Database> with _$FlowersDaoMixin {
   FlowersDao(Database db) : super(db);
 
   Stream<List<Flower>> watchFlowers() => select(flowers).watch();
+  Future<List<Flower>> getFlowers() => select(flowers).get();
 
   Stream<List<FlowerWithLinks>> allFlowers() {
     return select(flowers)

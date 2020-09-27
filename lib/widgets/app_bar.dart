@@ -17,7 +17,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   MainAppBar({
     Key key,
-    this.color = const Color(0xFF326544),
+    this.color,
     this.title,
     this.actions,
     this.onQueryChanged,
@@ -25,6 +25,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    var color = this.color ?? Theme.of(context).primaryColor;
     return DefaultTextStyle(
       style: TextStyle(color: color),
       child: IconTheme(

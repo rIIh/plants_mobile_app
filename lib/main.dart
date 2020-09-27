@@ -21,10 +21,9 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Palette.main,
           visualDensity: VisualDensity.adaptivePlatformDensity,
+          primaryColor: Colors.black,
           fontFamily: 'Playfair',
-          scaffoldBackgroundColor: Color(0xFFFFE8E0),
         ),
         initialBinding: AppBinding(),
         home: MyHomePage(),

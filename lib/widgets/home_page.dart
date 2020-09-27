@@ -5,11 +5,14 @@ import 'package:plants/data/database.dart';
 import 'package:plants/icons/plants_icons.dart';
 import 'package:plants/utils/insert_between.dart';
 import 'package:plants/utils/shift_color.dart';
+import 'package:plants/views/flowers_grid/view.dart';
 import 'package:plants/widgets/app_bar.dart';
 import 'package:plants/widgets/inherited_icon_button.dart';
+import 'package:plants/widgets/main_app_bar.dart';
 
 import 'bottom_navigation_bar_item.dart';
 import 'flower_view.dart';
+import 'search_app_bar.dart';
 
 class HomeController extends GetxController {
   final FlowersDao dao;
@@ -36,135 +39,49 @@ class MyHomePage extends GetWidget<HomeController> {
     );
   }
 
-  Widget _buildFlower(Flower flower) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Builder(
-        builder: (context) => GestureDetector(
-          onTap: () => openFlowerPage(context, flower),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0),
-                ),
-                elevation: 0,
-                child: Hero(
-                  tag: flower.id,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: flower.image != null
-                          ? DecorationImage(
-                              fit: BoxFit.cover,
-                              image: MemoryImage(flower.image),
-                            )
-                          : null,
-                    ),
-                    height: 164,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12),
-                child: Text(
-                  flower.name,
-                  style: Theme.of(context).textTheme.headline6.apply(color: Theme.of(context).primaryColor),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12),
-                child: Text(
-                  'фильтр',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText2
-                      .apply(fontWeightDelta: -1, color: shiftColorLuminance(Theme.of(context).primaryColor, 30)),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    Color primary = shiftColorLuminance(Theme.of(context).primaryColor, 30);
     const padding = 12.0;
+
     return Scaffold(
-      appBar: MainAppBar(
+      appBar: HomeAppBar(
         title: Text('My Book'),
-        actions: (context) => [
-          GestureDetector(
-            child: Icon(Plants.plus),
-            onTap: () => openFlowerPage(context, null),
-          ),
-        ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        backgroundColor: Theme.of(context).primaryColor,
-        fixedColor: Theme.of(context).scaffoldBackgroundColor,
-        unselectedItemColor: Theme.of(context).scaffoldBackgroundColor,
-        items: [
-          UntitledBottomNavigationBarItem(
-            icon: Icon(Plants.home, size: 18,),
-          ),
-          UntitledBottomNavigationBarItem(
-            icon: Icon(Plants.plant, size: 18,),
-          ),
-          UntitledBottomNavigationBarItem(
-            icon: Icon(Plants.user, size: 18,),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(padding),
-            child: Obx(
-              () => Column(
-                children: insertBetween(
-                  Column(
-                    children: [
-                      const SizedBox(
-                        height: 30,
+      bottomNavigationBar: Container(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: IconTheme(
+            data: IconThemeData(size: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Icon(Plants.home),
+                Icon(Plants.plant),
+                GestureDetector(
+                  onTap: () => openFlowerPage(context, null),
+                  child: DecoratedBox(
+                    decoration: ShapeDecoration(
+                      shape: CircleBorder(),
+                      color: Colors.black,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
                       ),
-                      Divider(
-                        height: 1,
-                        thickness: 1,
-                        color: primary,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
+                    ),
                   ),
-                  [
-                    if (controller.flowers.value != null)
-                      ...(controller.flowers.value
-                          .where(
-                            (element) => element.name.toLowerCase().contains(
-                                  controller.searchQuery.value.toLowerCase(),
-                                ),
-                          )
-                          .map(
-                            (flower) => [
-                              _buildFlower(flower),
-                            ],
-                          )
-                          .expand((element) => element)
-                          .toList()),
-                  ],
                 ),
-              ),
+                Icon(Plants.plant),
+                Icon(Plants.user),
+              ],
             ),
           ),
         ),
+      ),
+      body: FlowersGridView(
+        padding: const EdgeInsets.all(padding),
       ),
     );
   }
